@@ -5,7 +5,7 @@ export default class Players extends React.Component {
 
     constructor(props) {
         super(props);
-        let players = [{name: 'Enter the name', points: 0}];
+        let players = [{name: '', points: 0}, {name: '', points: 0}];
         let playerIndex = 0;
 
         this.state = { players: players, playerIndex: playerIndex};
@@ -47,10 +47,11 @@ export default class Players extends React.Component {
                 <div className="playerPoints">{ player.points }</div>
             </div>));
         
-        return (<div className="playersList">
-                    <button onClick={() => this.addPlayer_Click()}>Add Player</button>
+        return (<fieldset className="playersList">
+                    <legend>Players</legend>
+                    <button onClick={() => this.addPlayer_Click()}> Add Player</button>
                     {listItems}
                     <br clear="all"/>
-                </div>);
+                </fieldset>);
     }
 };

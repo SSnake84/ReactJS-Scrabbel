@@ -1,7 +1,18 @@
+
+html{
+  height: 100%;
+  width:100%;
+}
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
-  background-image: url('./images/background.png');
-  background-repeat: repeat-x;
+  background: linear-gradient(to right, #d0f0e0, #a0e0c0);
+  margin: 0 !important;
+}
+div#root{
+  margin-top: 8px;
+}
+button {
+  border-radius: 7px;
 }
 
 .hidden{ visibility: hidden; }
@@ -59,13 +70,15 @@ body {
   border:2px solid red;
 }
 
-.rack-actions {
-  /* border-width: 0 2px 2px 2px;
-  border-style: solid;
-  border-color: black;
-  border-radius: 4px; */
+div.rack-actions {
   padding: 10px 18px 10px 10px;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 0 10px #8d78a5;
+  border-radius: 15px 15px 15px 15px;
+  margin-top: 9px;
 }
+
 .rack-actions button {
   margin: 3px 0 0 10px;
 }
@@ -91,14 +104,31 @@ body {
   margin:0;
 }
 
+
+.jokerLetter{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  font-size: 30px;
+  background-image: url('./images/joker.png');
+  margin: 5px;
+  line-height: 50px;
+  text-align: center;
+}
+
+
 .playersList {
-  border-bottom: 2px solid black;
   padding-bottom: 15px;
+}
+
+.playersList button{
+  border-width: 4px;
 }
 
 .playersList input {
   float: left;
   margin-top:10px;
+  border-radius: 5px;
 }
 
 .playersList div.playerPoints {
@@ -110,15 +140,51 @@ body {
   border: 2px solid red;
 }
 
-.jokerLetter{
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  font-size: 30px;
-  background-image: url('./images/joker.png');
-  margin: 5px;
-  line-height: 50px;
-  text-align: center;
+.word{
+  float:left;
+}
+
+.wordPoints{
+  float:right;
+}
+
+.wordsList {
+  margin-top: 10px;
+  border: 4px double darkcyan; 
+  border-radius: 25px;
+  height: 240px;
+}
+
+.wordsList ul li{
+  list-style-type: circle;
+}
+
+.wordTotal {
+  margin-left: 130px;
+  font-weight: bold;
+}
+
+.wordTotalPoints {
+  font-weight: bold;
+}
+
+.confirmWords {
+  margin-top: 10px;
+  margin-left:55px
+}
+
+fieldset {
+  border: 4px double darkcyan;
+  border-radius: 25px;
+  padding-left: 10px;
+  width: 220px;
+}
+
+legend {
+  font-weight: bold;
+  color: darkcyan;
+  padding: 0px 5px 0px 5px;
+  font-size: 16px;
 }
 
 .modal {

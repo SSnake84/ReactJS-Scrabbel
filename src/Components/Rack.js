@@ -133,7 +133,6 @@ export default class Rack extends React.Component {
                 <button className="Play" onClick={() => this.play()}>Play</button>
                 <button className="Cancel" onClick={() => this.cancel()}>Cancel</button>
                 <button className="Shuffle" onClick={() => this.shuffle()}>Shuffle</button>
-                <button className="Swap">Swap</button>
             </div>
         </div>);
     }

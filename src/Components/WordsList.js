@@ -29,19 +29,25 @@ export default class WordsList extends React.Component {
         let b = []
 
         let words = this.state.words;
+        let points = 0;
 
-        for(let i=0; i< words.length; i++)
-            a.push(<li>{words[i].word + ' ' +  words[i].value}</li>);
+        for(let i=0; i< words.length; i++){
+            a.push(<li>
+                    <div class="word">{words[i].word}</div>
+                    <div className="wordPoints">{words[i].value}</div>
+                   </li>);
+            points += words[i].value;
+        }
         
-        if(a.length > 0) {
-            b.push(<br />);
-            b.push(<button onClick={() => this.confirmWords()}>Confirm Words</button>);
+        if(a.length > 0){
+            b.push(<div><div class="word wordTotal">TOTAL:</div><div className="wordPoints wordTotalPoints">{points}</div></div>);
+            b.push(<button className="confirmWords" onClick={() => this.confirmWords()}>Confirm Words</button>);
         }
 
-        return <div>
-                <h3>Words List:</h3>
+        return <fieldset className="wordsList">
+                <legend>Words List</legend>
                 <ul>{a}</ul>
                 {b}
-                </div>;
+                </fieldset>;
     }
 };
