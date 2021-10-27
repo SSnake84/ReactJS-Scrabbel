@@ -1,45 +1,43 @@
 import React from "react";
 import EventBus from "./EventBus";
+import { useState, useEffect } from "react";
 
-export default class JokerLetter extends React.Component {
+export default function JokerLetter(props) {
 
-    constructor(props) {
-        super(props);
-        this.state = { x: null, y: null, visible: false };
-      }
-  
-    componentDidMount() {
+    const [x,setX] = useState(null);
+    const [y,setY] = useState(null);
+    const [visible, setVisible] = useState(false);
+
+    useEffect( () =>{
         EventBus.on("Tile_JokerOnBoard", (data) => {
-            this.setState({ x : data.x, y: data.y, visible: true })
+            setX(data.x);
+            setY(data.y);
+            setVisible(true);
         });
+    }, []);
+
+    const handleClick = (chr) => {
+         EventBus.dispatch("JokerLetter_Selected", {x: x, y: y, letter: chr});
+         setX(null);
+         setY(null);
+         setVisible(false);
     }
 
-    componentWillUnmount() {
-        EventBus.remove("Tile_JokerOnBoard");
+    if(!visible)
+        return "";
+
+    let letters=[];
+    for (let  i = 65; i <= 90; i++){
+        let chr = String.fromCharCode(i);
+        letters.push(<div 
+        key={'jok_' + chr} 
+        className="jokerLetter" 
+        onClick={() => handleClick(chr)}>{chr}</div>);
     }
 
-    handleClick(chr){
-         EventBus.dispatch("JokerLetter_Selected", {x: this.state.x, y: this.state.y, letter: chr});
-         this.setState({ x :null, y: null, visible: false });
-    }
-
-    render () {
-         if(!this.state.visible)
-             return "";
-
-        let letters=[];
-        for (let  i = 65; i <= 90; i++){
-            let chr = String.fromCharCode(i);
-            letters.push(<div 
-                key={'jok_' + chr} 
-                className="jokerLetter" 
-                onClick={() => this.handleClick(chr)}>{chr}</div>);
-        }
-        
-        return (<div className="divJokerLetter modal">
-                <div className="modal-content">
-                    {letters}
-                </div>
-               </div>);
-    }
+    return (<div className="divJokerLetter modal">
+        <div className="modal-content">
+            {letters}
+        </div>
+    </div>);
 }
