@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import Rack from './Rack';
 import WordsList from './WordsList';
 import Players from './Players';
 import JokerLetter from './JokerLetter.js';
+import EventBus from './EventBus';
 
 
-export default class Game extends React.Component {
+export default function Game(props) {
+  const [playerIndex, setPlayerIndex] = useState(0);
   
-    render () {
-      return (
+  useEffect(() => {
+    EventBus.on("Next_Player", (data) => {
+      setPlayerIndex((data.index + 1) % data.playersCount);
+    });
+  }, []);
+
+  return (
     <div className="game">
         <div className="game-board">
         <Board />
@@ -18,12 +25,10 @@ export default class Game extends React.Component {
         <Rack />
         </div>
         <div className="right-pane">
-            <Players />
+            <Players playerIndex={playerIndex} />
             <WordsList />
         </div>
         <JokerLetter />
     </div>
-      );
-    }
-  };
-  
+    );
+}
