@@ -11,7 +11,7 @@ export default function WordsList(props) {
     }, []);
     
     const confirmWords = () => {
-        EventBus.dispatch("Words_Confirmed", { words : words });
+        EventBus.dispatch("Words_Confirmed", { words : words });            
         setWords([]);
     }
 
@@ -30,8 +30,8 @@ export default function WordsList(props) {
     }
     
     if(a.length > 0){
-        b.push(<div><div className="word wordTotal">TOTAL:</div><div className="wordPoints wordTotalPoints">{points}</div></div>);
-        b.push(<button className="confirmWords" onClick={() => confirmWords()}>Confirm Words</button>);
+        b.push(<div key="words_9"><div className="word wordTotal">TOTAL:</div><div className="wordPoints wordTotalPoints">{points}</div></div>);
+        b.push(<button key="button_10" className="confirmWords" onClick={() => confirmWords()}>Confirm Words</button>);
     }
 
     return <fieldset className="wordsList">
