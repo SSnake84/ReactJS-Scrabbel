@@ -104,7 +104,9 @@ div.rack-actions {
   margin:0;
 }
 
-
+.board .tile p sub {
+  font-size: 9px;
+}
 .jokerLetter{
   display: inline-block;
   width: 50px;
