@@ -1,60 +1,70 @@
 import React from "react";
 import { useState, useEffect } from "react/cjs/react.development";
 import EventBus from "./EventBus";
-// import { validWord } from "./PointsHelper";
+import { validWord } from "./PointsHelper";
 
-export default function WordsList(props) {
-    const [words, setWords] = useState(0);
-    // const [validWords, setValidWords] =  useState(new Array());
-    
-    useEffect(() => {
+export default class WordsList extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { words:[], validWords:[] };
+    }
+
+    componentDidMount() {
         EventBus.on("Words_Played", (data) => {
-             setWords(data.words);
-            //  checkWords(data.words);
-        });
-        EventBus.on("Rack_Cancel", () => setWords([]));
-    }, []);
+            this.setState({words: data.words});
+            this.checkWords(data.words);
+       });
+       EventBus.on("Rack_Cancel", () => this.setState({words: []}));
+   }
 
-    // const checkWords = (words) => {
-
-    //     let _validWords = [];
-
-    //     for(let i=0; i< words.length; i++)
-    //         _validWords.push(validWord(words[i].word));
-
-    //     setValidWords(_validWords);
-    // }
-    
-    const confirmWords = () => {
-        EventBus.dispatch("Words_Confirmed", { words : words });            
-        setWords([]);
+   componentWillUnmount() {
+        EventBus.remove("Words_Played");
+        EventBus.remove("Rack_Cancel");
     }
 
-    let a = [];
-    let b = []
+    checkWords = (words) => {
 
-    let _words = words;
-    // let _validWords = validWords;
-    let points = 0;
+        let _validWords = [];
 
-    for(let i=0; i< _words.length; i++){
-        a.push(<li key={"words" + i}>
-                <div className="word">{_words[i].word}</div>
-                {/* <div className={"wordcheck-" + (_validWords[i] ? "found" : "notfound")}></div> */}
-                <div className="wordPoints">{_words[i].value}</div>
+        for(let i=0; i< words.length; i++)
+            _validWords.push(validWord(words[i].word));
 
-               </li>);
-        points += _words[i].value;
-    }
-    
-    if(a.length > 0){
-        b.push(<div key="words_9"><div className="word wordTotal">TOTAL:</div><div className="wordPoints wordTotalPoints">{points}</div></div>);
-        b.push(<button key="button_10" className="confirmWords" onClick={() => confirmWords()}>Confirm Words</button>);
+        this.setState({ validWords: _validWords});
     }
 
-    return <fieldset className="wordsList">
-            <legend>Words List</legend>
-            <ul>{a}</ul>
-            {b}
-           </fieldset>;
+    confirmWords = () => {
+        EventBus.dispatch("Words_Confirmed", { "words": this.state.words});
+        this.setState({"words": []});
+    }
+
+    render() {
+        let a = [];
+        let b = []
+
+        let _words = this.state.words;
+        let _validWords = this.state.validWords;
+        let points = 0;
+
+        for(let i=0; i< _words.length; i++){
+            a.push(<li key={"words" + i}>
+                    <div className="word">{_words[i].word}</div>
+                    <div className={"wordcheck-" + (_validWords[i] ? "found" : "notfound")}></div>
+                    <div className="wordPoints">{_words[i].value}</div>
+
+                </li>);
+            points += _words[i].value;
+        }
+        
+        if(a.length > 0){
+            b.push(<div key="words_9"><div className="word wordTotal">TOTAL:</div><div className="wordPoints wordTotalPoints">{points}</div></div>);
+            b.push(<button key="button_10" className="confirmWords" onClick={() => this.confirmWords()}>Confirm Words</button>);
+        }
+
+        return <fieldset className="wordsList">
+                <legend>Words List</legend>
+                <ul>{a}</ul>
+                {b}
+            </fieldset>;
+    }
 }
