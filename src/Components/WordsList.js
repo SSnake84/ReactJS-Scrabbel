@@ -1,5 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react/cjs/react.development";
 import EventBus from "./EventBus";
 import { validWord } from "./PointsHelper";
 
