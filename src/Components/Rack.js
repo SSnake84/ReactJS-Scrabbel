@@ -117,7 +117,6 @@ export default class Rack extends React.Component {
             value={i}
             letter={this.state.tiles[i].letter} 
             visible={this.state.tiles[i].visible}
-            ref={i}
             onClick={ (e) => this.handleTileClick(e)}
             selected={this.state.tiles[i].selected}
             isOnBoard={false}

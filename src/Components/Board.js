@@ -229,6 +229,6 @@ export default class Board extends React.Component {
         }
         ret.push(<div key={j}>{rows}</div>);
       }
-      return <div class="board">{ret}</div>;
+      return <div className="board">{ret}</div>;
     }
   }

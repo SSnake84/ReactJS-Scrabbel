@@ -104,6 +104,7 @@ div.rack-actions {
   margin:0;
 }
 
+
 .board .tile p sub {
   font-size: 9px;
 }
@@ -150,13 +151,30 @@ div.rack-actions {
   float:right;
 }
 
+fieldset.wordsList ul li div.wordcheck-found::after {
+  float:left;
+  content: "\2714";
+  margin-left: 10px;
+  margin-top: -2px;
+  color: green;
+  font-weight: bold;
+}
+
+fieldset.wordsList ul li div.wordcheck-notfound::after {
+  float:left;
+  margin-left: 10px;
+  margin-top: -2px;
+}
+
 .wordsList {
   margin-top: 10px;
   border: 4px double darkcyan; 
   border-radius: 25px;
   height: 240px;
 }
-
+.wordsList ul {
+  line-height: 4px;
+}
 .wordsList ul li{
   list-style-type: circle;
 }
