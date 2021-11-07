@@ -43,6 +43,7 @@ export default class Board extends React.Component {
           "multiplier": multi,
           "jClass" : (multi.type + multi.factor),
           "letter" : null,
+          "sealed" : false,
           "rewardTaken": false
       }
     }
@@ -55,7 +56,7 @@ export default class Board extends React.Component {
           for(let i=0; i < 15; i++)
               squares[j][i] = this.getInitialSquareProps(i, j);
   
-      this.state = { squares: squares, rackTileSelected: null, dirties: [] };  
+      this.state = { squares: squares, rackTileSelected: null, dirties: [], dragFromBoard: null };  
     }
 
     isNullLetterAtXY(x,y){
@@ -147,6 +148,10 @@ export default class Board extends React.Component {
         let mainWord = isMainWordHorizontal ? this.getHorizontalWord(0) : this.getVerticalWord(0);
         if(mainWord === null)
           return [];
+
+        if(this.state.squares[7][7].letter == null)
+          return [];
+
         ret.push(mainWord);
         let word;
         for(let i=0; i< dirties.length; i++) {
@@ -168,8 +173,10 @@ export default class Board extends React.Component {
         for(let i=0; i < dirties.length; i++){
             sq[dirties[i].y][dirties[i].x].rewardTaken = true;
             if(isCancel)
-                sq[dirties[i].y][dirties[i].x].letter = null;
-        }
+              sq[dirties[i].y][dirties[i].x].letter = null;
+            else
+              sq[dirties[i].y][dirties[i].x].sealed = true;
+          }
         
         this.setState({ squares : sq , dirties: []});
     }
@@ -182,7 +189,7 @@ export default class Board extends React.Component {
 
     componentDidMount() {
 
-        EventBus.on("Rack_TileSelected", (data) => this.setState({ rackTileSelected : data.tile }));
+        EventBus.on("Rack_TileSelected", (data) => this.setState({ rackTileSelected : data.tile, dragFromBoard: null } ));
         EventBus.on("Rack_Play", (data) => EventBus.dispatch("Words_Played", {words: this.getWords(data.tilesCant) } ));
         EventBus.on("Words_Confirmed", (data) => this.clearDirties(false));
         EventBus.on("Rack_Cancel", () => this.clearDirties(true));
@@ -197,21 +204,48 @@ export default class Board extends React.Component {
         EventBus.remove("JokerLetter_Selected");
     }
 
-    Square_Click = function(x,y) {
-        if(!this.isNullLetterAtXY(x,y))
-            return;
-        if(this.state.rackTileSelected === null)
-            return;
+    TileDragFromSquare = function(x,y)
+    {
+      if(this.isNullLetterAtXY(x,y))
+          return;
+      
+        this.setState({dragFromBoard: { x: x, y: y}, rackTileSelected: null});
+    }
 
-         let sq = this.state.squares;
-         let dirties = this.state.dirties;
+    TileDropedOnSquare= function(x,y) {
+      if(!this.isNullLetterAtXY(x,y))
+          return;
+      if(this.state.rackTileSelected === null && this.state.dragFromBoard == null)
+          return;
 
-         sq[y][x].letter = this.state.rackTileSelected.letter;
-         dirties.push({x: x, y: y});
-         this.setState({squares: sq, dirties: dirties, rackTileSelected: null});
-        EventBus.dispatch("Tile_RackToBoard", { });
-        if(sq[y][x].letter.length === 2 || sq[y][x].letter === '*')
-          EventBus.dispatch("Tile_JokerOnBoard", { x: x, y: y });
+
+       let sq = this.state.squares;
+       let dirties = Object.assign([], this.state.dirties);
+
+       let letter;
+       if(this.state.rackTileSelected != null ) 
+         letter = this.state.rackTileSelected.letter;
+       else{
+         letter = sq[this.state.dragFromBoard.y][this.state.dragFromBoard.x].letter;
+         sq[this.state.dragFromBoard.y][this.state.dragFromBoard.x].letter = null;
+         let i=0;
+         let found = false;
+         while(i<dirties.length && !found)
+         {
+           if( dirties[i].x === this.state.dragFromBoard.x && dirties[i].y === this.state.dragFromBoard.y) {
+             dirties.splice(i, 1);
+             found=true;
+           }
+           i++;
+         }
+       }
+ 
+       sq[y][x].letter = letter;
+       dirties.push({x: x, y: y});
+       this.setState({squares: sq, dirties: dirties, rackTileSelected: null, dragFromBoard: null});
+      EventBus.dispatch("Tile_RackToBoard", { });
+      if(sq[y][x].letter.length === 2 || sq[y][x].letter === '*')
+        EventBus.dispatch("Tile_JokerOnBoard", { x: x, y: y });
     };
 
     render(){
@@ -224,7 +258,9 @@ export default class Board extends React.Component {
                 key={(j*15+i).toString()} 
                 jClass ={this.state.squares[j][i].jClass}
                 letter={this.state.squares[j][i].letter}
-                onClick={() => this.Square_Click(i,j)}
+                sealed={this.state.squares[j][i].sealed}
+                onDrop={() => this.TileDropedOnSquare(i,j)}
+                onDrag={() => this.TileDragFromSquare(i,j)}
                 />);
         }
         ret.push(<div key={j}>{rows}</div>);

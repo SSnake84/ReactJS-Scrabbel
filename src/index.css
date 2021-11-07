@@ -105,6 +105,9 @@ div.rack-actions {
 }
 
 
+.board .tile-sealed {
+  border-style: dashed;
+}
 .board .tile p sub {
   font-size: 9px;
 }
@@ -226,4 +229,11 @@ legend {
   padding: 20px;
   border: 1px solid #888;
   width: 280px;
+}
+
+#footer{
+  position: absolute;
+  bottom:10px;
+  left:30%;
+  right:30%;
 }

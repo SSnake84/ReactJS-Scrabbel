@@ -24,3 +24,7 @@ export function validWord(word){
       default: return false;
     }
 }
+
+export const ItemTypes = {
+  TILE: 'Tile'
+}

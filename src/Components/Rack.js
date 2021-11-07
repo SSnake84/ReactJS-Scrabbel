@@ -33,8 +33,8 @@ export default class Rack extends React.Component {
         i++;
       }
     }
-  
-    handleTileClick(e) {
+
+    handleTileDrag(e) {
       let a = parseInt(e.currentTarget.id.replace('rack_tile_',''));
       let tiles = this.state.tiles;
       for(let i=0; i< tiles.length; i++)
@@ -48,7 +48,7 @@ export default class Rack extends React.Component {
         }
   
       this.setState({ tiles: tiles });
-    };
+    }
 
     shuffle(){
         let tiles = this.state.tiles;
@@ -117,7 +117,8 @@ export default class Rack extends React.Component {
             value={i}
             letter={this.state.tiles[i].letter} 
             visible={this.state.tiles[i].visible}
-            onClick={ (e) => this.handleTileClick(e)}
+            // onClick={ (e) => this.handleTileClick(e)}
+            onDrag={ (e) => this.handleTileDrag(e)}
             selected={this.state.tiles[i].selected}
             isOnBoard={false}
         />);
