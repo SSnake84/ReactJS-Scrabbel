@@ -171,7 +171,7 @@ export default class Board extends React.Component {
         const dirties = this.state.dirties;
 
         for(let i=0; i < dirties.length; i++){
-            sq[dirties[i].y][dirties[i].x].rewardTaken = true;
+            sq[dirties[i].y][dirties[i].x].rewardTaken = !isCancel;
             if(isCancel)
               sq[dirties[i].y][dirties[i].x].letter = null;
             else
